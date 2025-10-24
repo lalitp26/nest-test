@@ -35,11 +35,11 @@ export class UserTypeormRepository implements IUserRepository {
     return this.mapper.toDomainList(entities);
   }
 
-  async update(user: User): Promise<User> {
+  async update(user: User): Promise<User | null> {
     const entity = this.mapper.toPersistence(user);
     await this.repository.update(user.id, entity);
     const updatedEntity = await this.repository.findOne({ where: { id: user.id } });
-    return this.mapper.toDomain(updatedEntity!);
+    return updatedEntity ? this.mapper.toDomain(updatedEntity) : null;
   }
 
   async delete(id: string): Promise<void> {
